@@ -2,33 +2,32 @@
 using namespace std ;
 typedef pair<int,int> Pair ;
 
-const int N = 1e5 + 2 ;
+const int N = 1e4 + 2 ;
 const int INF = 1e9 + 7 ;
 
 /************************************/
-multiset<Pair> q ;
+Pair a[ N ] ;
+int day[ N ] ;
 
 int main() {
-	int type ;
-	int k , p ;
-	while( cin >> type ) {
-		if( type == 0 ) break ;
-		if( type == 1 ) {
-			scanf( "%d %d" , &k , &p ) ;
-			q.insert( { p , k } ) ;
+	int n , l ;
+	while( cin >> n >> l ) {
+		for( int i = 0 ; i < n ; i ++ ) {
+			scanf( "%d %d" , &a[ i ].first , &a[ i ].second ) ;
 		}
-		if( type == 2 ) {
-			printf( "%d\n" , q.empty() ? 0 : q.rbegin()->second ) ;
-			if( !q.empty() ) {
-				q.erase( ( -- q.end() ) ) ;
+		sort( a , a + n , greater<Pair>() ) ;
+		memset( day , 0 , sizeof day ) ;
+		int sum = 0 ;
+		for( int i = 0 ; i < n ; i ++ ) {
+			for( int j = a[ i ].second ; j >= 0 ; j -- ) {
+				if( day[ j ] < l ) {
+					sum += a[ i ].first ;
+					day[ j ] ++ ;
+					break ;
+				}
 			}
 		}
-		if( type == 3 ) {
-			printf( "%d\n" , q.empty() ? 0 : q.begin()->second ) ;
-			if( !q.empty() ) {
-				q.erase( q.begin() ) ;
-			}
-		}
+		printf( "%d\n" , sum ) ;
 	}
 
 	return 0 ;
