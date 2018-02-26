@@ -32,7 +32,7 @@ LongD bs() {
 }
 
 int main() {
-	cout.precision(10);
+	cout.precision(10) ;
 	cin >> k >> d >> t ;
 	P = k < d ? d - k : d*Ceil( k , d ) - k ;
 	A = k + P ;
