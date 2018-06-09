@@ -6,6 +6,11 @@ const int M = 1e6 + 2 ;
 const int INF = 1e9 + 7 ;
 
 /************************************/
+inline int Ceil( int a , int b ) {
+	return a/b + ( a%b != 0 ) ;
+}
+
+/************************************/
 bool P[ N ] ;
 vector<int> Pth ;
 
