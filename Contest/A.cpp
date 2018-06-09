@@ -2,19 +2,53 @@
 using namespace std ;
 
 const int N = 1e5 + 2 ;
+const int M = 1e6 + 2 ;
 const int INF = 1e9 + 7 ;
+
+/************************************/
+bool P[ N ] ;
+vector<int> Pth ;
+
+void sieve( int n ) {
+	for( int i = 2 ; i <= n ; i ++ ) {
+		P[ i ] = true ;
+	}
+	for( int num = 2 ; num <= n ; num ++ ) {
+		if( !P[ num ] ) continue ;
+		Pth.push_back( num ) ;
+		for( int mult = 2*num ; mult <= n ; mult += num ) {
+			P[ mult ] = false ;
+		}
+	}
+}
+
+/************************************/
+int isPrime[ M ] ;
+
+void solve( int n , int m ) {
+	for( int i = 0 ; Pth[ i ]*Pth[ i ] <= m ; i ++ ) {
+		int prime = Pth[ i ] ;
+		int k = max( 2 , Ceil( n , prime ) ) ;
+		for( int mult = prime*k ; mult <= m ; mult += prime ) {
+			isPrime[ mult - n ] = false ;
+		}
+	}
+	int cant = 0 ;
+	for( int i = n ; i <= m ;i ++ ) {
+		if( isPrime[ i - n ] && isPrime[ i - n + 2 ] ) {
+			cant ++ ;
+		}
+	}
+	printf( "%d\n" , cant ) ;
+}
 
 /************************************/
 
 int main() {
-	printf( "Escribir tipo de vehiculo:\n" ) ;
-	char automovil[ 30 ] ;
-	gets( automovil ) ;
-	if( strcmp( automovil , "turismo" ) == 0 ) printf( "\npeaje = 500" ) ;
-	else if( strcmp( automovil , "autobus" ) == 0 ) printf( "\npeaje = 3000" ) ;
-	else if( strcmp( automovil , "motocicleta" ) == 0 ) printf( "\npeaje = 300" ) ;
-	else printf( "\nvehiculo no autorizado" );
+	sieve( N ) ;
+	int n , m ;
+	cin >> n >> m ;
+	solve( n , m ) ;
 
-	return 0 ;
+    return 0 ;
 }
-
