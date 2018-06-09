@@ -31,6 +31,9 @@ void sieve( int n ) {
 int isPrime[ M ] ;
 
 void solve( int n , int m ) {
+	for( int i = n ; i <= m ; i ++ ) {
+		isPrime[ i - n ] = true ;
+	}
 	for( int i = 0 ; Pth[ i ]*Pth[ i ] <= m ; i ++ ) {
 		int prime = Pth[ i ] ;
 		int k = max( 2 , Ceil( n , prime ) ) ;
@@ -39,7 +42,7 @@ void solve( int n , int m ) {
 		}
 	}
 	int cant = 0 ;
-	for( int i = n ; i <= m ;i ++ ) {
+	for( int i = n ; i <= m ; i ++ ) {
 		if( isPrime[ i - n ] && isPrime[ i - n + 2 ] ) {
 			cant ++ ;
 		}
