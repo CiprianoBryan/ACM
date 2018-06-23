@@ -4,39 +4,49 @@ using namespace std ;
 const int N = 100 + 2 ;
 const int INF = 1e9 + 7 ;
 
+string nivel = "0111222333344";
+
 /************************************/
 vector<int> adj[ N ] ;
 bool isAncestor[ N ][ N ] ; // primer numero es padre, segundo el hijo
 int level[ N ] ;
 
-void dfs( int cur , int fat , int niv ) {
-	level[ cur ] = niv ;
-    isAncestor[ fat ][ cur ] = true ;
-	for( int nxt : adj[ cur ] ) {
-		if( nxt == fat ) continue ;
-		dfs( nxt , cur , niv + 1 ) ;
-	}
-}
-
-int lca( int u , int v , int n ) {
-	int root = 1 ; // el padre mas antiguo(mas arriba) es root
-	dfs( root , 0 , 0 ) ;
-    for( int a = 1 ; a <= n ; a ++ ) {
-        for( int b = 1 ; b <= n ; b ++ ) {
-            for( int c = 1 ; c <= n ; c ++ ) {
+void preprocess( int n ) {//HALLAR ANCESTROS DE TODOS LOS USUARIOS
+	for( int a = 1 ; a <= n ; a ++ ) { //foreach de todos los usuarios
+        for( int b = 1 ; b <= n ; b ++ ) { //foreach de todos los usuarios
+            for( int c = 1 ; c <= n ; c ++ ) { //foreach de todos los usuarios
                 if( isAncestor[ a ][ b ] && isAncestor[ b ][ c ] ) {
                     isAncestor[ a ][ c ] = true ;
                 }
             }
         }
     }
-    int lowestAncestor = root ;
+}
+
+vector<int> lca( vector<int> childs , int n ) {
+    int nroChilds = childs.size();
+    int lowestLevel = 0 ;
+    vector<int> ancestors ;
     for( int ancestor = 1 ; ancestor <= n ; ancestor ++ ) {
-        if( isAncestor[ ancestor ][ u ] && isAncestor[ ancestor ][ v ] && level[ lowestAncestor ] < level[ancestor] ) {
-            lowestAncestor = ancestor;
+    	bool isCommunAncestor = true ;
+    	for( int i = 0 ; i < nroChilds ; i ++ ) {
+    		int child = childs[ i ] ;
+    		if( !isAncestor[ ancestor ][ child ] ) {
+    			isCommunAncestor = false ;
+    			break ;
+    		}
+    	}
+    	if( isCommunAncestor ) {
+        	if( lowestLevel < level[ancestor] ) {
+        		ancestors.clear();
+        		lowestLevel = level[ancestor];
+        	}
+        	if( lowestLevel == level[ancestor] ) {
+        		ancestors.push_back(ancestor);
+        	}
         }
     }
-    return lowestAncestor;
+    return ancestors;
 }
 
 int main() {
@@ -44,15 +54,29 @@ int main() {
 	int u , v ;
 	cin >> n >> m ; // numero de nodos(personas que conforman la familia) , numero de bordes o relaciones directas en la familia
 	while( m -- ) {
-		scanf( "%d %d" , &u , &v ) ; // par de nodos que tienen una relacion directa (padre/hijo) (no importa el orden)
+		scanf( "%d %d" , &u , &v ) ; // par de nodos que tienen una relacion directa (padre/hijo) (EN ORDEN)
+		isAncestor[u][v] = true ;
 		adj[ u ].push_back( v ) ;
 		adj[ v ].push_back( u ) ;
 	}
-	int q ;
+	for( int i = 0 ; i < n ; i ++ ) {
+		level[ i + 1 ] = nivel[i] - '0';
+	}
+	preprocess( n );
+	int q , child, nroChilds;
 	cin >> q ;
 	while( q -- ) {
-		scanf( "%d %d" , &u , &v ) ;
-		printf( "%d\n" , lca( u , v , n ) ) ;
+		cin >> nroChilds ;
+		vector<int> childs;
+		for( int i =0 ; i < nroChilds; i ++ ) {
+			scanf( "%d" , &child );
+			childs.push_back(child);
+		}
+		vector<int> ancestors = lca(childs, n);
+		for( int i = 0 ; i < ancestors.size() ; i++ ) {
+			printf( "%d " , ancestors[i] );
+		}
+		printf("\n");
 	}
 
     return 0 ;
