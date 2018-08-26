@@ -18,18 +18,6 @@ const int MOD = 1e9 + 7 ;
 const double EPS = 1e-8 ;
 
 /************************************/
-vector<int> adj[ N ] ;
-bool vis[ N ] ;
-
-void dfs( int from ) {
-	vis[ from ] = true ;
-	for( int to : adj[ from ] ) {
-		if( vis[ to ] ) continue ;
-		dfs( to ) ;
-	}
-}
-
-/************************************/
 
 int main() {
 	
